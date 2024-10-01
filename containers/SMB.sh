@@ -5,6 +5,7 @@ mkdir data
 # --name [Container name on Host]
 # -v [Host location]:[Container Location]
 # -s “[public name];[file path];[Yes/No browsable];[Yes/No readonly];[Yes/No guest];[authorized user]”
+echo '
 version: "3"
 services:
     samba:
@@ -20,4 +21,7 @@ services:
         volumes:
             - ./data:/multimedia
         image: dperson/samba
-        command: -u "user;1234" -s "multimedia;/multimedia;yes;no;no;user"
+        command: -u "user;1234" -s "multimedia;/multimedia;yes;no;no;user" ' >| 'docker-compose.yml'
+
+#run docker
+sudo docker-compose up -d
