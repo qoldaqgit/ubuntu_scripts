@@ -5,8 +5,7 @@ mkdir data
 # --name [Container name on Host]
 # -v [Host location]:[Container Location]
 # -s “[public name];[file path];[Yes/No browsable];[Yes/No readonly];[Yes/No guest];[authorized user]”
-echo "
-version: '3'
+echo "version: '3'
 services:
     samba:
         restart: unless-stopped
