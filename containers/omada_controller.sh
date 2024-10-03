@@ -4,10 +4,11 @@ cd omada/
 mkdir data logs
 
 #Create docker compose file
-echo "services:
+echo "version: '3'
+services:
     omada-controller:
         container_name: omada-controller
-        stop_grace_period: "60"
+        stop_grace_period: \"60\"
         restart: unless-stopped
         ulimits:
             nofile:
