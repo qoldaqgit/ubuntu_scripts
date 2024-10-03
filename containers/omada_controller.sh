@@ -1,4 +1,4 @@
-#sudo curl -sSL https://install.pi-hole.net | bash
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/containers/omada_controller.sh | bash
 mkdir omada
 cd omada/
 mkdir data logs
