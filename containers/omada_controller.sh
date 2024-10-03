@@ -1,3 +1,4 @@
+#sudo curl -sSL https://install.pi-hole.net | bash
 mkdir omada
 cd omada/
 mkdir data logs
