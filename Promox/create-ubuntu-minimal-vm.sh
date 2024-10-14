@@ -9,6 +9,7 @@ qm set $1 --boot c --bootdisk scsi0
 qm set $1 --serial0 socket --vga serial0
 rm ubuntu*
 
+
 else
 echo "please provide a [VM ID#] [VM Name]"
 fi
