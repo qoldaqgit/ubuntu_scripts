@@ -8,7 +8,7 @@ qm set $1 --ide2 local-lvm:cloudinit
 qm set $1 --boot c --bootdisk scsi0
 qm set $1 --serial0 socket --vga serial0
 rm ubuntu*
-
+echo "Done"
 
 else
 echo "please provide a [VM ID#] [VM Name]"
