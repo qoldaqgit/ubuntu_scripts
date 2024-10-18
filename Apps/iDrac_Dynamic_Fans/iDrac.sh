@@ -290,9 +290,9 @@ function get_Dell_server_model () {
 trap 'gracefull_exit' SIGQUIT SIGKILL SIGTERM
 
 # Prepare, format and define initial variables
-IDRAC_HOST=10.10.10.18
+IDRAC_HOST=<iDrac IP>
 IDRAC_USERNAME=root
-IDRAC_PASSWORD=Thor+Hulk=$
+IDRAC_PASSWORD=<Password>
 FAN_SPEED=1
 CPU_TEMPERATURE_THRESHOLD=48
 CHECK_INTERVAL=30
