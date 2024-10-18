@@ -2,7 +2,9 @@
 
 #Ubuntu 22.04 
 #Omada Controller 5.14.26.1
-
+header_info() {
+  clear
+  cat <<"EOF"
 echo '#######################################################'
 echo '##                                                   ##'
 echo '##    Installation of Omada Controller 5.14.26.1     ##'
