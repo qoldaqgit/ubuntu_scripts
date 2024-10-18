@@ -3,6 +3,12 @@
 #Ubuntu 22.04 
 #Omada Controller 5.14.26.1
 
+echo '#######################################################'
+echo '##                                                   ##'
+echo '##    Installation of Omada Controller 5.14.26.1     ##'
+echo '##                                                   ##'
+echo '#######################################################'
+
 apt update && apt upgrade -y
 apt install openjdk-8-jre-headless gnupg2 jsvc curl -y
 
