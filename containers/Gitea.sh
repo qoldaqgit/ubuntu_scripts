@@ -12,7 +12,7 @@ services:
   server:
     image: gitea/gitea:1.16.5
     container_name: gitea
-    restart: unless-stop
+    restart: unless-stopped
     networks:
       - gitea
     volumes:
