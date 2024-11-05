@@ -1,6 +1,6 @@
 #/bin/bash
 
-# bash -c "$(wget -qLO - )"
+# bash -c "$(wget -qLO - https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Promox/ct_template_cleaner.sh)"
 if [[ $# -eq 1 ]]
 then
 sudo apt update && sudo apt upgrade -y
