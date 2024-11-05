@@ -14,6 +14,8 @@ sudo truncate -s 0 /etc/machine-id
 touch ssh_config.sh
 echo "sudo dpkg-reconfigure openssh-server" > ssh_config.sh
 
+sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+
 rm ct_template_cleaner.sh
 sudo shutdown 0
 
