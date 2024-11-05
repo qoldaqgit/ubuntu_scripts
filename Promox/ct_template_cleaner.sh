@@ -1,4 +1,6 @@
 #/bin/bash
+
+# bash -c "$(wget -qLO - )"
 if [[ $# -eq 1 ]]
 then
 sudo apt update && sudo apt upgrade -y
