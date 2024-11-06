@@ -11,10 +11,13 @@ sudo apt autoremove
 sudo rm /etc/ssh/ssh_host_*
 sudo truncate -s 0 /etc/machine-id
 
+#Recreate SSH Keys
 touch ssh_config.sh
 echo "sudo dpkg-reconfigure openssh-server" > ssh_config.sh
 
-sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+#Unlocks remote root ssh
+touch ~/root_unlock.sh
+sudo echo "sudo echo "PermitRootLogin yes" >> /etc/ssh/sshd_config" > ~/root_unlock.sh
 
 rm ct_template_cleaner.sh
 sudo shutdown 0
