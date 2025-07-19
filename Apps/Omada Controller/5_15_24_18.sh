@@ -3,7 +3,6 @@
 
 #Ubuntu 22.04 
 #Omada Controller 5.15.24.18
-header_info() {
   clear
 echo '#######################################################'
 echo '##                                                   ##'
