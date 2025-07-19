@@ -11,7 +11,7 @@ echo '##                                                   ##'
 echo '#######################################################'
 
 apt update && apt upgrade -y
-sudo apt install openjdk-11-jre-headless -y
+apt install openjdk-11-jre-headless
 sudo apt install autoconf make gcc
 wget https://archive.apache.org/dist/commons/daemon/source/commons-daemon-1.2.4-src.tar.gz
 tar zxvf commons-daemon-x.y.z-src.tar.gz
