@@ -5,7 +5,6 @@
 #Omada Controller 5.15.24.18
 header_info() {
   clear
-  cat <<"EOF"
 echo '#######################################################'
 echo '##                                                   ##'
 echo '##    Installation of Omada Controller 5.15.24.18    ##'
@@ -23,4 +22,4 @@ echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gp
 sudo apt update
 sudo apt install -y mongodb-org=7.0.14 mongodb-org-database=7.0.14 mongodb-org-server=7.0.14 mongodb-mongosh mongodb-org-mongos=7.0.14 mongodb-org-tools=7.0.14
 wget https://static.tp-link.com/upload/software/2025/202507/20250703/omada_v5.15.24.18_linux_x64_20250630184434.deb
-sudo dpkg -i Omada_SDN_Controller_v5.14.26.1_linux_x64.deb
+sudo dpkg -i omada_v5.15.24.18_linux_x64_20250630184434.deb
