@@ -3,7 +3,7 @@
 
 #Ubuntu 22.04 
 #Omada Controller 5.15.24.18
-  clear
+clear
 echo '#######################################################'
 echo '##                                                   ##'
 echo '##    Installation of Omada Controller 5.15.24.18    ##'
