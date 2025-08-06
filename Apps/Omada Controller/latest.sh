@@ -1,4 +1,4 @@
-#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Omada%20Controller/5_15_24_18.sh | bash
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Omada%20Controller/latest.sh | bash
 #!/bin/bash
 
 clear
