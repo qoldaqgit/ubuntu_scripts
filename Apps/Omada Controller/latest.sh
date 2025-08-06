@@ -1,15 +1,12 @@
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Omada%20Controller/5_15_24_18.sh | bash
 #!/bin/bash
-#title           :install-omada-controller.sh
-#description     :Installer for TP-Link Omada Software Controller
-#supported       :Ubuntu 20.04, Ubuntu 22.04, Ubuntu 24.04
-#author          :monsn0
-#date            :2021-07-29
-#updated         :2025-03-31
 
-echo -e "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "TP-Link Omada Software Controller - Installer"
-echo "https://github.com/monsn0/omada-installer"
-echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+clear
+echo '#######################################################'
+echo '##                                                   ##'
+echo '##     Installing of TP-Link Omada Controller        ##'
+echo '##                                                   ##'
+echo '#######################################################'
 
 echo "[+] Verifying running as root"
 if [ `id -u` -ne 0 ]; then
