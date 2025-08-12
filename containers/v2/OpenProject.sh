@@ -11,7 +11,7 @@ services:
       - '8180:80'
     environment:
       OPENPROJECT_HOST__NAME: 10.10.10.30:8180
-      OPENPROJECT_SECRET_KEY_BASE: secret
+      OPENPROJECT_SECRET_KEY_BASE: mrMI3p1BCMkHNSsxdy1alWH4E94tC7qY
     volumes:
       - ~/openproject/data:/var/openproject/pgdata
       - ~/openproject/assets:/var/openproject/assets
