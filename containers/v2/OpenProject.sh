@@ -1,3 +1,4 @@
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/containers/v2/OpenProject.sh | bash
 mkdir -p openproject/{data,assets}
 cd openproject
 touch docker-compose.yml
