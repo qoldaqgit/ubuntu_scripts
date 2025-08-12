@@ -8,7 +8,7 @@ sudo apt-get -y install podman podman-compose
 #systemctl --user enable --now podman.socket
 
 #Enable docker.io repository
-echo "unqualified-search-registries = ["docker.io"]" | sudo tee -a /etc/containers/registries.conf
+echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 
 sudo useradd -m -s /bin/bash podmanuser
 sudo su podmanuser
