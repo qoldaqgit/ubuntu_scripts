@@ -14,7 +14,7 @@ sudo useradd -m -s /bin/bash podmanuser
 sudo su podmanuser
 cd
 #Setup containers Drives
-mkdir nginx nginx/data nginx/letsencrypt
+mkdir -p nginx nginx/data nginx/letsencrypt
 
 echo "version: '3.8'
 services:
