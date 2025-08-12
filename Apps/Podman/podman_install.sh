@@ -11,7 +11,21 @@ echo "unqualified-search-registries = ["docker.io"]" | sudo tee -a /etc/containe
 sudo useradd -m -s /bin/bash podmanuser
 sudo su podmanuser
 cd
-nano docker-compose.yaml
+#Setup containers Drives
+mkdir nginx nginx/data nginx/letsencrypt
+
+echo "version: '3.8'
+services:
+  app:
+    image: 'docker.io/jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+      - '8081:81'
+      - '8443:443'
+    volumes:
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt" | tee -a docker-compose.yaml
 exit
 sudo touch /lib/systemd/system/podman-run.service
 echo "
