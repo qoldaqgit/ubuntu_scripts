@@ -1,4 +1,6 @@
 #https://www.youtube.com/watch?v=69dADRzXpqk
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/podman_install.sh | bash
+#!/bin/bash
 
 sudo apt-get update
 sudo apt-get -y install podman podman-compose
