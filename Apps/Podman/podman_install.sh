@@ -29,7 +29,7 @@ services:
       - ./nginx/data:/data
       - ./nginx/letsencrypt:/etc/letsencrypt" | tee -a docker-compose.yaml
 exit
-loginctl enable-linger podmanuser
+
 sudo touch /lib/systemd/system/podman-run.service
 echo "
 [Unit]
@@ -47,13 +47,13 @@ ExecStart=/usr/bin/podman-compose -f /home/podmanuser/docker-compose.yaml up -d
 ExecStop=/user/bin/podman-compose down
 
 [Install]
-WantedBy=defaul.target" | sudo tee -a /lib/systemd/system/podman-run.service
+WantedBy=default.target" | sudo tee -a /lib/systemd/system/podman-run.service
 
 sudo systemctl --system daemon-reload
 
 sudo systemctl enable podman-run.service
 sudo systemctl start podman-run.service
 
-
+#loginctl enable-linger podmanuser
 #delete stoped containers
 #podman container prune
