@@ -29,6 +29,7 @@ services:
       - ./nginx/data:/data
       - ./nginx/letsencrypt:/etc/letsencrypt" | tee -a docker-compose.yaml
 exit
+loginctl enable-linger podmanuser
 sudo touch /lib/systemd/system/podman-run.service
 echo "
 [Unit]
