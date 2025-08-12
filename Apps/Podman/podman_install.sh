@@ -38,6 +38,7 @@ After=network-online.target
 
 [Service]
 User=podmanuser
+Group=podmanuser
 Type=oneshot
 RemainAfterExit=true
 ExecStartPre=/usr/bin/podman system prune -f
