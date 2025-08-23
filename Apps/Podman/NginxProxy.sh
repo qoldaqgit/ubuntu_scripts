@@ -2,6 +2,7 @@
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash
 #!/bin/bash
 PODUSER="podmanuser"
+MFOLDER="nginx"
 #Confirm user exist, if not create
 if ! id "$PODUSER" &>/dev/null; then
     sudo useradd -m -s /bin/bash $PODUSER
@@ -12,7 +13,7 @@ fi
 sudo su podmanuser
 cd
 #Setup containers Drives
-mkdir -p nginx nginx/data nginx/letsencrypt
+mkdir -p $MFOLDER $MFOLDER/data $MFOLDER/letsencrypt
 #Create container compose file
 echo "version: '3.8'
 services:
@@ -25,15 +26,15 @@ services:
       - '8443:443'
     volumes:
       - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt" > /home/podmanuser/nginx/docker-compose.yaml
+      - ./letsencrypt:/etc/letsencrypt" > /home/$PODUSER/$MFOLDER/docker-compose.yaml
 
 #Create or add to the containers manager file
 cd ~/
 FILE="containers-manager.sh"
-LINE='
+LINE="
 #Ngix Proxy Manager
-/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
-#Ports #8080,#8081,#8443'
+/usr/bin/podman-compose -f /home/'$PODUSER'/'$MFOLDER'/docker-compose.yaml up -d
+#Ports #8080,#8081,#8443"
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
