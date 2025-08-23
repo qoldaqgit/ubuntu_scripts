@@ -40,7 +40,7 @@ services:
       TZ: 'America/New_York'
       # Set a password to access the web interface. Not setting one will result in a random password being assigned
       FTLCONF_webserver_api_password: '$MPASS'
-      # If using Docker's default `bridge` network setting the dns listening mode should be set to 'all'
+      # If using Docker's default 'bridge' network setting the dns listening mode should be set to 'all'
       FTLCONF_dns_listeningMode: 'all'
     # Volumes store your data between container upgrades
     volumes:
@@ -59,7 +59,7 @@ services:
     restart: unless-stopped" > docker-compose.yaml
 
 #Create or add to the containers manager file
-cd ~/
+cd
 FILE="containers-manager.sh"
 LINE="
 #PiHole
