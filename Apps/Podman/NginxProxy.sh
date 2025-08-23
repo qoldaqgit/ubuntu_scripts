@@ -31,7 +31,7 @@ services:
 cd ~/
 FILE="containers-manager.sh"
 LINE='
-/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d 
+/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
 #Ports #8080,#8081,#8443'
 
 # Create file if it doesn't exist and set executable permissions
