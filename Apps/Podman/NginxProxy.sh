@@ -13,7 +13,8 @@ fi
 sudo su podmanuser
 cd
 #Setup containers Drives
-mkdir -p $MFOLDER "$MFOLDER/data" "$MFOLDER/letsencrypt"
+mkdir -p $MFOLDER $MFOLDER/data $MFOLDER/letsencrypt
+cd $MFOLDER
 #Create container compose file
 echo "version: '3.8'
 services:
@@ -26,10 +27,10 @@ services:
       - '8443:443'
     volumes:
       - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt" > "/home/$PODUSER/$MFOLDER/docker-compose.yaml"
+      - ./letsencrypt:/etc/letsencrypt" > docker-compose.yaml
 
 #Create or add to the containers manager file
-cd ~/
+cd
 FILE="containers-manager.sh"
 LINE="
 #Ngix Proxy Manager
