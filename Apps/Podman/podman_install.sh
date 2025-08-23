@@ -3,12 +3,14 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get -y install podman podman-compose
+sudo apt-get -y install podman podman-compose nano
 
 #systemctl --user enable --now podman.socket
 
 #Enable docker.io repository
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
+echo "net.ipv4.ip_unprivileged_port_start=40" | sudo tee -a /etc/sysctl.d/98-containers.conf
+sudo sysctl --system
 
 sudo useradd -m -s /bin/bash podmanuser
 
