@@ -2,19 +2,19 @@
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/PiHole.sh | bash
 #!/bin/bash
 PODUSER="podmanuser"
-MFOLDER="pihole"
+#MFOLDER="pihole"
 #Confirm user exist, if not create
-if ! id "$PODUSER" &>/dev/null; then
-    sudo useradd -m -s /bin/bash $PODUSER
+if ! id "podmanuser" &>/dev/null; then
+    sudo useradd -m -s /bin/bash podmanuser
 else
-    echo "User '$PODUSER' already exists."
+    echo "User 'podmanuser' already exists."
 fi
 #Login into user home folder
-sudo su $PODUSER
+sudo su podmanuser
 cd
 #Setup containers Drives
-mkdir -p $MFOLDER $MFOLDER/etc-pihole 
-cd $MFOLDER
+mkdir -p pihole pihole/etc-pihole 
+cd pihole
 MPASS="AdBlockDNS"
 #Create container compose file
 echo "# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
@@ -24,12 +24,12 @@ services:
     image: pihole/pihole:latest
     ports:
       # DNS Ports
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "1053:53/tcp"
+      - "1053:53/udp"
       # Default HTTP Port
-      - "80:80/tcp"
+      - "1080:80/tcp"
       # Default HTTPs Port. FTL will generate a self-signed certificate
-      - "443:443/tcp"
+      - "1443:443/tcp"
       # Uncomment the below if using Pi-hole as your DHCP Server
       #- "67:67/udp"
       # Uncomment the line below if you are using Pi-hole as your NTP server
@@ -63,7 +63,7 @@ cd ~/
 FILE="containers-manager.sh"
 LINE="
 #PiHole
-/usr/bin/podman-compose -f /home/$PODUSER/$MFOLDER/docker-compose.yaml up -d
+/usr/bin/podman-compose -f /home/podmanuser/pihole/docker-compose.yaml up -d
 #Ports #53,#80,#443"
 
 # Create file if it doesn't exist and set executable permissions
