@@ -24,7 +24,7 @@ services:
       - '8443:443'
     volumes:
       - ./nginx/data:/data
-      - ./nginx/letsencrypt:/etc/letsencrypt" > docker-compose.yaml
+      - ./nginx/letsencrypt:/etc/letsencrypt" > /home/podmanuser/nginx/docker-compose.yaml
 
 #Create or add to the containers manager file
 cd ~/
