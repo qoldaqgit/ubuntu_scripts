@@ -22,12 +22,12 @@ services:
     image: pihole/pihole:latest
     ports:
       # DNS Ports
-      - "1053:53/tcp"
-      - "1053:53/udp"
+      - "53:53/tcp"
+      - "53:53/udp"
       # Default HTTP Port
-      - "1080:80/tcp"
+      - "80:80/tcp"
       # Default HTTPs Port. FTL will generate a self-signed certificate
-      - "1443:443/tcp"
+      - "443:443/tcp"
       # Uncomment the below if using Pi-hole as your DHCP Server
       #- "67:67/udp"
       # Uncomment the line below if you are using Pi-hole as your NTP server
@@ -76,4 +76,4 @@ echo "$LINE" >> "$FILE"
 
 exit
 echo -e "\e[0;32m[~] PiHole has been successfully installed! :)\e[0m"
-echo -e "\e[0;32m[~] Please visit https://${hostIP}:1080 to complete the inital setup wizard.\e[0m\n"
+echo -e "\e[0;32m[~] Please visit https://${hostIP}:80 to complete the inital setup wizard.\e[0m\n"
