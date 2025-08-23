@@ -48,3 +48,7 @@ fi
 echo "$LINE" >> "$FILE"
 
 exit
+echo -e "\e[0;32m[~] NGINNX Prox Maanager has been successfully installed! :)\e[0m"
+echo -e "\e[0;32m[~] Please visit https://${hostIP}:8081 to complete the inital setup wizard.\e[0m\n"
+echo "username : admin@example.com"
+echo "password : changeme"
