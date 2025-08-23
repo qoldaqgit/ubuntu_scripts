@@ -62,7 +62,7 @@ cd ~/
 FILE="containers-manager.sh"
 LINE="
 #PiHole
-/usr/bin/podman-compose -f /home/'$PODUSER'/'$MFOLDER'/docker-compose.yaml up -d
+/usr/bin/podman-compose -f /home/$PODUSER/$MFOLDER/docker-compose.yaml up -d
 #Ports #53,#80,#443"
 
 # Create file if it doesn't exist and set executable permissions
