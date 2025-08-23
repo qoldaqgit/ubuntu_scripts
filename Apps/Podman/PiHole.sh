@@ -13,7 +13,7 @@ fi
 sudo su $PODUSER
 cd
 #Setup containers Drives
-mkdir -p $MFOLDER $MFOLDER/etc-pihole 
+mkdir -p $MFOLDER "$MFOLDER/etc-pihole" 
 MPASS="AdBlockDNS"
 #Create container compose file
 echo "# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
@@ -55,7 +55,7 @@ services:
       - SYS_TIME
       # Optional, if Pi-hole should get some more processing time
       - SYS_NICE
-    restart: unless-stopped" > /home/$PODUSER/$MFOLDER/docker-compose.yaml
+    restart: unless-stopped" > "/home/$PODUSER/$MFOLDER/docker-compose.yaml"
 
 #Create or add to the containers manager file
 cd ~/
