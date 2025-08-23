@@ -6,8 +6,6 @@ PODUSER="podmanuser"
 #Confirm user exist, if not create
 if ! id "podmanuser" &>/dev/null; then
     sudo useradd -m -s /bin/bash podmanuser
-else
-    echo "User 'podmanuser' already exists."
 fi
 #Login into user home folder
 sudo su podmanuser
