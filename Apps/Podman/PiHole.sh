@@ -2,6 +2,7 @@
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/PiHole.sh | bash
 #!/bin/bash
 PODUSER="podmanuser"
+MFOLDER="pihole"
 #Confirm user exist, if not create
 if ! id "$PODUSER" &>/dev/null; then
     sudo useradd -m -s /bin/bash $PODUSER
@@ -12,7 +13,7 @@ fi
 sudo su $PODUSER
 cd
 #Setup containers Drives
-mkdir -p pinhole pinhole/etc-pihole 
+mkdir -p $MFOLDER $MFOLDER/etc-pihole 
 MPASS="AdBlockDNS"
 #Create container compose file
 echo "# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
@@ -54,15 +55,15 @@ services:
       - SYS_TIME
       # Optional, if Pi-hole should get some more processing time
       - SYS_NICE
-    restart: unless-stopped" > /home/$PODUSER/pinhole/docker-compose.yaml
+    restart: unless-stopped" > /home/$PODUSER/$MFOLDER/docker-compose.yaml
 
 #Create or add to the containers manager file
 cd ~/
 FILE="containers-manager.sh"
-LINE='
+LINE="
 #PiHole
-/usr/bin/podman-compose -f /home/$PODUSER/pinhole/docker-compose.yaml up -d
-#Ports #53,#80,#443'
+/usr/bin/podman-compose -f /home/'$PODUSER'/'$MFOLDER'/docker-compose.yaml up -d
+#Ports #53,#80,#443"
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
