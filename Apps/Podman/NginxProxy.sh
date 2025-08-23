@@ -29,7 +29,7 @@ services:
 #Create or add to the containers manager file
 cd ~/
 FILE="containers-manager.sh"
-LINE='/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d'
+LINE='/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d #8080,#8081,#8443'
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
