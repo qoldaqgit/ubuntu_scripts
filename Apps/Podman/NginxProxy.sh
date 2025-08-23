@@ -1,11 +1,12 @@
 #https://www.youtube.com/watch?v=69dADRzXpqk
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash
 #!/bin/bash
+PODUSER="podmanuser"
 #Confirm user exist, if not create
-if ! id "podmanuser" &>/dev/null; then
-    sudo useradd -m -s /bin/bash podmanuser
+if ! id "$PODUSER" &>/dev/null; then
+    sudo useradd -m -s /bin/bash $PODUSER
 else
-    echo "User 'username' already exists."
+    echo "User '$PODUSER' already exists."
 fi
 #Login into user home folder
 sudo su podmanuser
