@@ -31,6 +31,7 @@ services:
 cd ~/
 FILE="containers-manager.sh"
 LINE='
+#Ngix Proxy Manager
 /usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
 #Ports #8080,#8081,#8443'
 
