@@ -1,5 +1,5 @@
 #https://www.youtube.com/watch?v=69dADRzXpqk
-#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/podman_install.sh | bash
+#sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash
 #!/bin/bash
 #Confirm user exist, if not create
 if ! id "podmanuser" &>/dev/null; then
