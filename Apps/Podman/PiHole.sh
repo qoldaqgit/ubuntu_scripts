@@ -75,3 +75,5 @@ fi
 echo "$LINE" >> "$FILE"
 
 exit
+echo -e "\e[0;32m[~] PiHole has been successfully installed! :)\e[0m"
+echo -e "\e[0;32m[~] Please visit https://${hostIP}:1080 to complete the inital setup wizard.\e[0m\n"
