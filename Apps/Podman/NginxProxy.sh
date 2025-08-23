@@ -2,19 +2,19 @@
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash
 #!/bin/bash
 PODUSER="podmanuser"
-MFOLDER="nginx"
+#MFOLDER="nginx"
 #Confirm user exist, if not create
-if ! id "$PODUSER" &>/dev/null; then
-    sudo useradd -m -s /bin/bash $PODUSER
+if ! id "podmanuser" &>/dev/null; then
+    sudo useradd -m -s /bin/bash podmanuser
 else
-    echo "User '$PODUSER' already exists."
+    echo "User 'podmanuser' already exists."
 fi
 #Login into user home folder
 sudo su podmanuser
 cd
 #Setup containers Drives
-mkdir -p $MFOLDER $MFOLDER/data $MFOLDER/letsencrypt
-cd $MFOLDER
+mkdir -p nginx nginx/data nginx/letsencrypt
+cd nginx
 #Create container compose file
 echo "version: '3.8'
 services:
@@ -34,7 +34,7 @@ cd
 FILE="containers-manager.sh"
 LINE="
 #Ngix Proxy Manager
-/usr/bin/podman-compose -f /home/$PODUSER/$MFOLDER/docker-compose.yaml up -d
+/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
 #Ports #8080,#8081,#8443"
 
 # Create file if it doesn't exist and set executable permissions
