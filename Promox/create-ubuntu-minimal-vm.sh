@@ -1,3 +1,5 @@
+#https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Promox/create-ubuntu-minimal-vm.sh
+
 if [[ $# -eq 2 ]]
 then
 wget https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
