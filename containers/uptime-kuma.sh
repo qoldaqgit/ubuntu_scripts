@@ -1,3 +1,5 @@
+#https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/containers/uptime-kuma.sh
+
 mkdir uptime-kuma && cd uptime-kuma
 mkdir data 
 echo 'services:
