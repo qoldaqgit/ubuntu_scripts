@@ -22,8 +22,7 @@ services:
     image: 'docker.io/portainer/portainer-ce:latest'
     restart: unless-stopped
     ports:
-      - '8000:8000'
-      - '9000:9000'
+      - '9443:9443'
     volumes:
       - /var/run/docker.sock:/vavr/run/docker.sock
       - ./data:/data" > docker-compose.yaml
@@ -34,7 +33,7 @@ FILE="containers-manager.sh"
 LINE="
 #Portainer
 /usr/bin/podman-compose -f /home/podmanuser/portainer/docker-compose.yaml up -d
-#Ports #8000,#9000"
+#Ports #9443"
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
