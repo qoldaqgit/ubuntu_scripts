@@ -32,7 +32,7 @@ services:
 cd
 FILE="containers-manager.sh"
 LINE="
-#Ngix Proxy Manager
+#Portainer
 /usr/bin/podman-compose -f /home/podmanuser/portainer/docker-compose.yaml up -d
 #Ports #8000,#9000"
 
