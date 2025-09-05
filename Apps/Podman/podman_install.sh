@@ -15,7 +15,13 @@ systemctl --user enable --now podman.socket
 sudo useradd -m -s /bin/bash podmanuser
 
 ## Creating autorun
-touch /home/podmanuser/containers-manager.sh
+FILE="/home/podmanuser/containers-manager.sh"
+if [ ! -f "$FILE" ]; then
+    touch "$FILE"
+    chmod +x "$FILE"
+    echo "#!/bin/bash" > "$FILE"
+fi
+
 echo "[Unit]
 Description=Podman-run
 Wants=network-online.target
