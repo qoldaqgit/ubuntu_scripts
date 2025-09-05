@@ -15,7 +15,28 @@ systemctl --user enable --now podman.socket
 sudo useradd -m -s /bin/bash podmanuser
 
 ## Creating autorun
-/etc/systemd/system/podman-run.service
+touch /home/podmanuser/containers-manager.sh
+echo "[Unit]
+Description=Podman-run
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=podmanuser
+Group=podmanuser
+Type=oneshot
+RemainAfterExit=true
+ExecStartPre=/usr/bin/podman system prune -f
+ExecStart=/home/podmanuser/containers-manager.sh     
+ExecStop=/usr/bin/podman-compose down 
+
+[Install]
+WantedBy=default.target
+" > /etc/systemd/system/podman-run2.service
+
+sudo systemctl --system daemon-reload
+sudo systemctl enable podman-run.service
+sudo systemctl start podman-run.service
 
 echo "For PiHole run"
 echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/PiHole.sh | bash"
