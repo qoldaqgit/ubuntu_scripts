@@ -1,6 +1,8 @@
 #https://www.youtube.com/watch?v=69dADRzXpqk
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/Portainer.sh | bash
 #!/bin/bash
+sudo systemctl enable --now podman.socket
+
 PODUSER="podmanuser"
 #MFOLDER="portainer"
 #Confirm user exist, if not create
@@ -24,7 +26,7 @@ services:
     ports:
       - '9443:9443'
     volumes:
-      - /var/run/docker.sock:/vavr/run/docker.sock
+      - /run/podman/podman.sock:/var/run/docker.sock
       - ./data:/data" > docker-compose.yaml
 
 #Create or add to the containers manager file
