@@ -47,4 +47,4 @@ echo "$LINE" >> "$FILE"
 
 exit
 echo -e "\e[0;32m[~] Portainer has been successfully installed! :)\e[0m"
-echo -e "\e[0;32m[~] Please visit https://${hostIP}:9000 to complete the inital setup wizard.\e[0m\n"
+echo -e "\e[0;32m[~] Please visit https://${hostIP}:9443 to complete the inital setup wizard.\e[0m\n"
