@@ -3,7 +3,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get -y install podman podman-compose nano
+sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 
 #Enable docker.io repository
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
