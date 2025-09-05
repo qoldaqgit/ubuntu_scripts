@@ -38,7 +38,7 @@ ExecStop=/usr/bin/podman-compose down
 
 [Install]
 WantedBy=default.target
-" > /etc/systemd/system/podman-run2.service
+" > /etc/systemd/system/podman-run.service
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
