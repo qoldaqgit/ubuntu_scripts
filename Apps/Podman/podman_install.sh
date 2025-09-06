@@ -17,12 +17,12 @@ sudo useradd -m -s /bin/bash podmanuser
 ## Creating autorun
 FILE="/home/podmanuser/containers-manager.sh"
 if [ ! -f "$FILE" ]; then
-    touch "$FILE"
-    chmod +x "$FILE"
-    echo "#!/bin/bash" > "$FILE"
+    sudo touch "$FILE"
+    sudo chmod +x "$FILE"
+    sudo bash -c 'echo "#!/bin/bash" > "$FILE"'
 fi
 
-echo "[Unit]
+sudo bash -c 'echo "[Unit]
 Description=Podman-run
 Wants=network-online.target
 After=network-online.target
@@ -38,7 +38,7 @@ ExecStop=/usr/bin/podman-compose down
 
 [Install]
 WantedBy=default.target
-" > /etc/systemd/system/podman-run.service
+" > /etc/systemd/system/podman-run.service'
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
