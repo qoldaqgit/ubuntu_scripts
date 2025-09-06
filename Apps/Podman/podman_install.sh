@@ -19,8 +19,8 @@ sudo su podmanuser
 FILE="/home/podmanuser/containers-manager.sh"
 if [ ! -f "$FILE" ]; then
     touch "$FILE"
-    chmod +x "$FILE"
     echo "#!/bin/bash" > "$FILE"
+    chmod +x "$FILE"
 fi
 exit
 sudo bash -c 'echo "[Unit]
