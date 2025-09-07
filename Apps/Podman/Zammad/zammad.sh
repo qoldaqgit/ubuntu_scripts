@@ -23,7 +23,7 @@ FILE="containers-manager.sh"
 LINE="
 #Zammad - Ticket System
 /usr/bin/podman-compose -f /home/podmanuser/zammad/docker-compose.yml up -d
-#Ports #5432,#8080"
+#Ports #8080"
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
@@ -31,14 +31,16 @@ if [ ! -f "$FILE" ]; then
     chmod +x "$FILE"
     echo "#!/bin/bash" > "$FILE"
 fi
-
 # Append line to the file
 echo "$LINE" >> "$FILE"
-
 exit
 
+#Adjust your host’s settings to run Elasticsearch properly:
+sysctl -w vm.max_map_count=262144
+#Restart the service
 sudo systemctl stop podman-run.service
 sudo systemctl start podman-run.service
+#Provide info to user
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
 echo -e "\e[0;32m[~] Zammad has been successfully installed! :)\e[0m"
 echo -e "\e[0;32m[~] Please visit http://$IPHOST:8080 to complete the inital setup wizard.\e[0m\n"
