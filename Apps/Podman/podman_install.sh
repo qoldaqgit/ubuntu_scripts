@@ -13,6 +13,8 @@ sudo sysctl --system
 systemctl --user enable --now podman.socket
 
 sudo useradd -m -s /bin/bash podmanuser
+loginctl enable-linger podmanuser
+
 
 #sudo su podmanuser
 ## Creating autorun
@@ -50,6 +52,6 @@ echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/
 echo ""
 echo "For Nginx Proxy Manager run"
 echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash"
-#loginctl enable-linger podmanuser
+
 #delete stoped containers
 #podman container prune
