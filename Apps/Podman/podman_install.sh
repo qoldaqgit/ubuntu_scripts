@@ -15,16 +15,7 @@ systemctl --user enable --now podman.socket
 sudo useradd -m -s /bin/bash podmanuser
 sudo loginctl enable-linger podmanuser
 
-
-#sudo su podmanuser
-## Creating autorun
-#FILE="/home/podmanuser/containers-manager.sh"
-#if [ ! -f "$FILE" ]; then
-#    touch "$FILE"
-#    echo "#!/bin/bash" > "$FILE"
-#    chmod +x "$FILE"
-#fi
-#exit
+# this might be needed for cleaning: ExecStartPre=/usr/bin/podman system prune -f
 sudo bash -c 'echo "[Unit]
 Description=Podman-run
 Wants=network-online.target
@@ -35,7 +26,7 @@ User=podmanuser
 Group=podmanuser
 Type=oneshot
 RemainAfterExit=true
-ExecStartPre=/usr/bin/podman system prune -f
+
 ExecStart=/home/podmanuser/containers-manager.sh     
 ExecStop=/usr/bin/podman-compose down 
 
@@ -45,6 +36,25 @@ WantedBy=default.target
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
+
+
+#create file to display containers list
+echo '
+clear
+sudo systemd-run --machine=podmanuser@ --quiet --user --collect --pipe --wait podman container ps --all  --format "table {{.Names}}\t{{.Status}}\t{{.Image}}" | while read -r name status image; do
+  short_image="${image##*/}"  # Strip everything before last /
+  
+  if [[ "$status" =~ ^Exited ]]; then
+    #echo -e "\e[31m$status\t$name\t\t$short_image\e[0m"
+    printf "\033[0;31m%-10s %-40s %-30s\033[0m\n" "$status" "$name" "$short_image" 
+
+  else
+    #echo -e "$status\t$name\t\t$short_image"
+    printf "%-10s %-40s %-30s\n" "$status" "$name" "$short_image"
+  fi
+done
+' > containers-list.sh
+
 
 echo ""
 echo "Install Nginx Proxy Manager"
