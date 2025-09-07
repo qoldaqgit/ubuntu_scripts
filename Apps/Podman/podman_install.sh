@@ -47,9 +47,15 @@ sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
 
 echo ""
-echo "For Nginx Proxy Manager run"
+echo "Install Nginx Proxy Manager"
 echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash"
 echo ""
+echo "Intall Zammad - Ticket System"
+echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/Zammad/zammad.sh | bash"
+echo ""
+
+
+
 
 #delete stoped containers
 #podman container prune
