@@ -33,9 +33,9 @@ services:
 cd
 FILE="containers-manager.sh"
 LINE="
-#Ngix Proxy Manager
+#Nginx Proxy Manager
 /usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
-#Ports #8080,#8081,#8443"
+#Ports #80,#81,#443"
 
 # Create file if it doesn't exist and set executable permissions
 if [ ! -f "$FILE" ]; then
@@ -48,9 +48,20 @@ fi
 echo "$LINE" >> "$FILE"
 
 exit
+
+#uninstall NGINX
+#sudo systemctl stop podman-run.service
+#sudo sed -i 's/Nginx Proxy Manager
+#/usr/bin/podman-compose -f /home/podmanuser/nginx/docker-compose.yaml up -d
+#Ports #80,#81,#443//g' /home/podmanuser/containers-manager.sh
+
+#sudo rm -r /home/podmanuser/nginx
+#sudo systemctl start podman-run.service
+
 sudo systemctl stop podman-run.service
 sudo systemctl start podman-run.service
-echo -e "\e[0;32m[~] NGINNX Prox Maanager has been successfully installed! :)\e[0m"
-echo -e "\e[0;32m[~] Please visit https://${hostIP}:8081 to complete the inital setup wizard.\e[0m\n"
+IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
+echo -e "\e[0;32m[~] NGINX Proxy Manager has been successfully installed! :)\e[0m"
+echo -e "\e[0;32m[~] Please visit https://$IPHOST:81 to complete the inital setup wizard.\e[0m\n"
 echo "username : admin@example.com"
 echo "password : changeme"
