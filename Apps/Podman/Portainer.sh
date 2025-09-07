@@ -48,6 +48,8 @@ fi
 echo "$LINE" >> "$FILE"
 
 exit
+sudo systemctl stop podman-run.service
+sudo systemctl start podman-run.service
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
 echo -e "\e[0;32m[~] Portainer has been successfully installed! :)\e[0m"
 echo -e "\e[0;32m[~] Please visit https://$IPHOST:9443 to complete the inital setup wizard.\e[0m\n"
