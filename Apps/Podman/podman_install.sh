@@ -45,13 +45,11 @@ WantedBy=default.target
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
-#sudo systemctl start podman-run.service
 
-echo "For PiHole run"
-echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/PiHole.sh | bash"
 echo ""
 echo "For Nginx Proxy Manager run"
 echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/NginxProxy.sh | bash"
+echo ""
 
 #delete stoped containers
 #podman container prune
