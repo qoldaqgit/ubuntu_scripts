@@ -13,7 +13,7 @@ sudo sysctl --system
 systemctl --user enable --now podman.socket
 
 sudo useradd -m -s /bin/bash podmanuser
-loginctl enable-linger podmanuser
+sudo loginctl enable-linger podmanuser
 
 
 #sudo su podmanuser
@@ -45,7 +45,7 @@ WantedBy=default.target
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-run.service
-sudo systemctl start podman-run.service
+#sudo systemctl start podman-run.service
 
 echo "For PiHole run"
 echo "sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/PiHole.sh | bash"
