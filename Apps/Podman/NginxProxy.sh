@@ -22,9 +22,9 @@ services:
     image: 'docker.io/jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
-      - '8080:80'
-      - '8081:81'
-      - '8443:443'
+      - '80:80'
+      - '81:81'
+      - '443:443'
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt" > docker-compose.yaml
@@ -48,6 +48,8 @@ fi
 echo "$LINE" >> "$FILE"
 
 exit
+sudo systemctl stop podman-run.service
+sudo systemctl start podman-run.service
 echo -e "\e[0;32m[~] NGINNX Prox Maanager has been successfully installed! :)\e[0m"
 echo -e "\e[0;32m[~] Please visit https://${hostIP}:8081 to complete the inital setup wizard.\e[0m\n"
 echo "username : admin@example.com"
