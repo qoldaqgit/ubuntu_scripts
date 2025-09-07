@@ -62,6 +62,6 @@ sudo systemctl stop podman-run.service
 sudo systemctl start podman-run.service
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
 echo -e "\e[0;32m[~] NGINX Proxy Manager has been successfully installed! :)\e[0m"
-echo -e "\e[0;32m[~] Please visit https://$IPHOST:81 to complete the inital setup wizard.\e[0m\n"
+echo -e "\e[0;32m[~] Please visit http://$IPHOST:81 to complete the inital setup wizard.\e[0m\n"
 echo "username : admin@example.com"
 echo "password : changeme"
