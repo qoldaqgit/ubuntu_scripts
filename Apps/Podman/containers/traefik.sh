@@ -6,8 +6,8 @@ cd ~/containers
 mkdir -p traefik
 cd traefik
 #Create container compose file
-cat > compose.yaml < 'EOF'
-"secrets:
+cat > compose.yaml << 'EOF'
+secrets:
   cf-token:
     file: ./cf-token
 services:
@@ -60,7 +60,7 @@ services:
 networks:
   proxy:
     #external: true # or uncomment this line to stop auto create the network
-" EOF
+EOF
 
 #Create .env file
 echo "TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-username) | sed -e s/\\$/\\$\\$/g
