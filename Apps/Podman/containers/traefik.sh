@@ -3,8 +3,8 @@
 
 cd ~/containers
 #Setup containers Drives
-mkdir -p cloudflared
-cd cloudflared
+mkdir -p traefik
+cd traefik
 #Create container compose file
 echo "
 secrets:
