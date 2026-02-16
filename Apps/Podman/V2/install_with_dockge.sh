@@ -87,3 +87,7 @@ sudo systemctl start podman-autorun.service
 cd ~
 clear
 echo "Installation Completed"
+#Provide info to user
+IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
+echo -e "\e[0;32m[~] Podman has been successfully installed! :)\e[0m"
+echo -e "\e[0;32m[~] Please visit http://$IPHOST:5001 to complete the inital setup wizard.\e[0m\n"
