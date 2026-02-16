@@ -63,7 +63,9 @@ networks:
 EOF
 
 #Create .env file
-echo "TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-username) | sed -e s/\\$/\\$\\$/g
-FQDN=sample.com" > .env
+cat > .env << 'EOF'
+TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-username) | sed -e s/\\$/\\$\\$/g
+FQDN=sample.com
+EOF
 #Create cf-tocken
 echo "your-tocken-here" > cf-tocken
