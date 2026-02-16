@@ -65,7 +65,7 @@ EOF
 #Create .env file
 cat > .env << 'EOF'
 TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-username) | sed -e s/\\$/\\$\\$/g
-FQDN=sample.com
+FQDN=your.domain
 EOF
 #Create cf-tocken
 echo "your-tocken-here" > cf-tocken
@@ -180,3 +180,5 @@ log:
 accessLog:
   filePath: "/var/log/traefik/access.log"
 EOF
+touch acme.json
+chmod 600 acme.json
