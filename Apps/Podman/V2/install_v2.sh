@@ -1,9 +1,15 @@
 #!/bin/bash
+sudo apt update && sudo apt upgrade -y
+sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 
+##### Create Required Dir/Files #####
 cd
 mkdir podman .podman podman/auto_restart podman/manual_start
 touch /home/podman/.podman/find_containers.sh
+echo "#!/bin/bash" > /home/podman/.podman/containers-manager-restart.sh
 
+chmod 771 /home/podman/.podman/find_containers.sh
+chmod 771 /home/podman/.podman/containers-manager-restart.sh
 
 ##### Find Containers to restart on boot #######
 ##### Scans /home/podman/restart folders for "compose.yaml" ######
@@ -23,9 +29,9 @@ find "/home/podman/podman/auto_restart" -type f -name "compose.yaml" \
 podman stop -a
   ' >> /home/podman/.podman/find_containers.sh
 
-##### Create Service for autoRun #########
+##### Create Service for AutoRun #########
 sudo bash -c 'echo "[Unit]
-Description=Podman-run
+Description=Podman-autorun
 Wants=network-online.target
 After=network-online.target
 
@@ -41,25 +47,8 @@ ExecStop=/home/podman/.podman/find_containers.sh
 
 [Install]
 WantedBy=default.target
-" > /etc/systemd/system/podman-run.service'##### Create Service for auto restart #########
-sudo bash -c 'echo "[Unit]
-Description=Podman-run
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=podman
-Group=podman
-Type=oneshot
-RemainAfterExit=true
-
-ExecStartPre=/usr/bin/podman system prune -f
-ExecStart=/home/podman/.podman/containers-manager-restart.sh   
-ExecStop=podman stop -a
-
-[Install]
-WantedBy=default.target
 " > /etc/systemd/system/podman-autorun.service'
 
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-autorun.service
+sudo systemctl start podman-autorun.service
