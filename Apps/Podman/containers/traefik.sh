@@ -68,7 +68,7 @@ TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-
 FQDN=your.domain
 EOF
 #Create cf-tocken
-echo "your-tocken-here" > cf-tocken
+echo "your-tocken-here" > cf-token
 
 cd config
 cat > config.yaml << 'EOF'
@@ -182,3 +182,4 @@ accessLog:
 EOF
 touch acme.json
 chmod 600 acme.json
+sudo apt install apache2-utils
