@@ -89,6 +89,10 @@ networks:
 " > compose.yaml
 
 
+##### Setup user enviroment #####
+sudo loginctl enable-linger $USER
+systemctl --user enable --now podman.socket
+
 sudo systemctl stop podman-autorun.service
 sudo systemctl start podman-autorun.service
 sudo systemctl status podman-autorun.service
