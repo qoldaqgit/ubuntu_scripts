@@ -49,6 +49,10 @@ ExecStop=/home/podman/.podman/find_containers.sh
 WantedBy=default.target
 " > /etc/systemd/system/podman-autorun.service'
 
+##### Setup user enviroment #####
+sudo loginctl enable-linger $USER
+systemctl --user enable --now podman.socket
+
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-autorun.service
 sudo systemctl start podman-autorun.service
