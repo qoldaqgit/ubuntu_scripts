@@ -12,8 +12,12 @@ echo "#!/bin/bash" > /home/podman/.podman/containers-manager-restart.sh
 chmod 771 /home/podman/.podman/find_containers.sh
 chmod 771 /home/podman/.podman/containers-manager-restart.sh
 
+##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
+sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
+
 ##### Find Containers to restart on boot #######
-##### Scans /home/podman/restart folders for "compose.yaml" ######
+##### Scans /home/podman/containers folders for "compose.yaml" ######
 cat > /home/podman/.podman/find_containers.sh << 'EOF'
 #!/bin/bash
 
@@ -21,7 +25,8 @@ OUTPUT_FILE="/home/podman/.podman/containers-manager-restart.sh"
 PREFIX="/usr/bin/podman-compose -f "
 SUFFIX=" up -d"
 
-echo "#!/bin/bash"> "$OUTPUT_FILE"
+echo "#!/bin/bash
+podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net"> "$OUTPUT_FILE"
 
 find "/home/podman/containers" -type f \( -name "compose.yaml" -o -name "composer.yml" \) | \
 while read -r file; do
@@ -30,7 +35,7 @@ while read -r file; do
     fi
 done
 
-podman image rm -a
+podman image rm 
 podman stop -a
 podman system prune -f
 EOF
@@ -79,7 +84,11 @@ echo "services:
       - DOCKGE_STACKS_DIR=/root/dockge/stacks
       # (Optional) Allow console managment
       - DOCKGE_ENABLE_CONSOLE=true
+networks:
+  intra_net:
+    external: true
 " > compose.yaml
+
 
 sudo systemctl stop podman-autorun.service
 sudo systemctl start podman-autorun.service
