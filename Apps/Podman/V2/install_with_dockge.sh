@@ -83,7 +83,7 @@ echo "services:
       # Tell Dockge where is your stacks directory
       - DOCKGE_STACKS_DIR=/root/dockge/stacks
       # (Optional) Allow console managment
-      - DOCKGE_ENABLE_CONSOLE=true
+      # - DOCKGE_ENABLE_CONSOLE=true
 networks:
   intra_net:
     external: true
