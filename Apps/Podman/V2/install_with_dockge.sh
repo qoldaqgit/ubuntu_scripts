@@ -9,13 +9,6 @@ mkdir .podman containers
 touch /home/podman/.podman/find_containers.sh
 echo "#!/bin/bash" > /home/podman/.podman/containers-manager-restart.sh
 
-chmod 771 /home/podman/.podman/find_containers.sh
-chmod 771 /home/podman/.podman/containers-manager-restart.sh
-
-##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
-sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
-echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
-
 ##### Find Containers to restart on boot #######
 ##### Scans /home/podman/containers folders for "compose.yaml" ######
 cat > /home/podman/.podman/find_containers.sh << 'EOF'
@@ -35,10 +28,16 @@ while read -r file; do
     fi
 done
 
-podman image rm 
 podman stop -a
-podman system prune -f
 EOF
+
+#### Set proper permission to files #####
+chmod 771 /home/podman/.podman/find_containers.sh
+chmod 771 /home/podman/.podman/containers-manager-restart.sh
+
+##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
+sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
 
 ##### Create Service for AutoRun #########
 sudo bash -c 'echo "[Unit]
@@ -92,9 +91,10 @@ networks:
 
 sudo systemctl stop podman-autorun.service
 sudo systemctl start podman-autorun.service
+sudo systemctl status podman-autorun.service
 
 cd ~
-clear
+#clear
 
 #Provide info to user
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
