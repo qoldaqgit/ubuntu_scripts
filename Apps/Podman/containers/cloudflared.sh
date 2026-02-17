@@ -6,7 +6,7 @@ cd ~/containers
 mkdir -p cloudflared
 cd cloudflared
 #Create container compose file
-cat > compose.yaml <<'EOF'
+cat > compose.yaml << 'EOF'
 services:
   cloudflared:
     image: cloudflare/cloudflared:latest
@@ -20,7 +20,7 @@ services:
 networks:
   cloudflarednetwork:
     name: cloudflared
-EOF 
+EOF
 
 #Create .env file
 echo "TOKEN=your-tunnel-tokken-here" > .env
