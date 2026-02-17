@@ -16,10 +16,10 @@ services:
     restart: unless-stopped
     command: tunnel --no-autoupdate run
     networks:
-      - cloudflarednetwork
+      - intra_net
 networks:
-  cloudflarednetwork:
-    name: cloudflared
+  intra_net:
+    external: true
 EOF
 
 #Create .env file
