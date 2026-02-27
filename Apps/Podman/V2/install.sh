@@ -18,7 +18,7 @@ cat > /app/.podman/find_containers.sh << 'EOF'
 OUTPUT_FILE="/app/.podman/containers-manager-restart.sh"
 echo "#!/bin/bash
 " > "$OUTPUT_FILE"
-podman ps --format "{{.Names}}" | {
+podman ps -a --format "{{.Names}}" | {
   first=true
   while IFS= read -r line; do
     if [ "$first" = true ]; then
