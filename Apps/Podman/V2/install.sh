@@ -72,7 +72,7 @@ echo "services:
       # - DOCKGE_ENABLE_CONSOLE=true
 networks:
   intra_net:
-  ip: 10.69.10.2
+  ##ip: 10.69.10.2
     external: true
 " > compose.yaml
 podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
