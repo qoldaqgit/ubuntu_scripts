@@ -5,7 +5,7 @@ sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 ##### Create Required Dir/Files #####
 cd
-mkdir /app /app/stacks /app/.podman
+sudo mkdir /app /app/stacks /app/.podman
 sudo chmod 755 /app
 sudo chown -R $USER:$USER /app/stacks /app/.podman
 touch /app/.podman/find_containers.sh
