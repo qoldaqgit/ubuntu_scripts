@@ -3,20 +3,18 @@
 sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
+
 ##### Create Required Dir/Files #####
-cd
 sudo mkdir /app /app/stacks /app/.podman /app/data
 sudo chmod 755 /app
 sudo chown -R $USER:$USER /app/stacks /app/.podman /app/data
 touch /app/.podman/find_containers.sh
 echo "#!/bin/bash" > /app/.podman/containers-manager-restart.sh
 
-##### Find running Containers to restart on boot #######
+##### Find running Containers to restart on boot (current running)#######
 cat > /app/.podman/find_containers.sh << 'EOF'
 #!/bin/bash
-
 OUTPUT_FILE="/app/.podman/containers-manager-restart.sh"
-
 echo "#!/bin/bash
 " > "$OUTPUT_FILE"
 podman ps --format "{{.Names}}" | while IFS= read -r line; do printf "podman start %s\n" "$line"; done >> "$OUTPUT_FILE"
@@ -30,6 +28,10 @@ chmod 771 /app/.podman/containers-manager-restart.sh
 ##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
 sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
 echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
+
+##### Setup user enviroment #####
+sudo loginctl enable-linger $USER
+systemctl --user enable --now podman.socket
 
 ##### Create Service for AutoRun #########
 sudo bash -c 'echo "[Unit]
@@ -75,12 +77,11 @@ networks:
   ##ip: 10.69.10.2
     external: true
 " > compose.yaml
+##### Setup Dockge env and start #####
 podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
 podman-compose up -d
-##### Setup user enviroment #####
-sudo loginctl enable-linger $USER
-systemctl --user enable --now podman.socket
 
+##### Setup the auto restart #####
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-autorun.service
 sudo systemctl start podman-autorun.service
@@ -89,7 +90,7 @@ sudo systemctl status podman-autorun.service
 cd ~
 #clear
 
-#Provide info to user
+##### Provide info to user #####
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
 echo -e "\e[0;32m[~] Podman has been successfully installed!\e[0m"
 echo -e "\e[0;32m[~] Please visit http://$IPHOST:5001 to complete the initall setup wizard.\e[0m\n"
