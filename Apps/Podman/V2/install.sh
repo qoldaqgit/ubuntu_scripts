@@ -8,6 +8,7 @@ echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/contai
 sudo mkdir /app /app/stacks /app/.podman /app/data
 sudo chmod 755 /app
 sudo chown -R $USER:$USER /app/stacks /app/.podman /app/data
+sudo chmod 700 /app/stacks /app/.podman /app/data
 touch /app/.podman/find_containers.sh
 echo "#!/bin/bash" > /app/.podman/containers-manager-restart.sh
 
@@ -17,8 +18,19 @@ cat > /app/.podman/find_containers.sh << 'EOF'
 OUTPUT_FILE="/app/.podman/containers-manager-restart.sh"
 echo "#!/bin/bash
 " > "$OUTPUT_FILE"
-podman ps --format "{{.Names}}" | while IFS= read -r line; do printf "podman start %s\n" "$line"; done >> "$OUTPUT_FILE"
-podman stop -a
+podman ps --format "{{.Names}}" | {
+  first=true
+  while IFS= read -r line; do
+    if [ "$first" = true ]; then
+      printf "podman start %s" "$line"
+      first=false
+    else
+      printf " && podman start %s" "$line"
+    fi
+  done
+  echo ""
+} >> "$OUTPUT_FILE"
+/app/.podman/containers-manager-restart.sh
 EOF
 
 #### Set proper permission to files #####
@@ -36,18 +48,18 @@ systemctl --user enable --now podman.socket
 ##### Create Service for AutoRun #########
 sudo bash -c 'echo "[Unit]
 Description=Podman-autorun
-Wants=network-online.target
-After=network-online.target
+After=podman.service
+Before=shutdown.target reboot.target halt.target
 
 [Service]
-User=1000
-Group=1000
+User=$USER
+Group=$USER
 Type=oneshot
 RemainAfterExit=true
 
 ExecStartPre=
 ExecStart=/app/.podman/containers-manager-restart.sh   
-ExecStop=/app/.podman/find_containers.sh
+ExecStop=podman stop -a
 
 [Install]
 WantedBy=default.target
@@ -82,6 +94,9 @@ podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_ne
 podman-compose up -d
 
 ##### Setup the auto restart #####
+#sudo systemctl stop podman-autorun.service
+#sudo systemctl disable podman-autorun.service
+
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-autorun.service
 sudo systemctl start podman-autorun.service
