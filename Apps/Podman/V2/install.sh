@@ -5,9 +5,9 @@ sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 ##### Create Required Dir/Files #####
 cd
-sudo mkdir /app /app/stacks /app/.podman
+sudo mkdir /app /app/stacks /app/.podman /app/data
 sudo chmod 755 /app
-sudo chown -R $USER:$USER /app/stacks /app/.podman
+sudo chown -R $USER:$USER /app/stacks /app/.podman /app/data
 touch /app/.podman/find_containers.sh
 echo "#!/bin/bash" > /app/.podman/containers-manager-restart.sh
 
@@ -69,7 +69,7 @@ echo "services:
     volumes:
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock
       - /app/data:/app/data
-      - ../:/root/dockge/stacks
+      - /app/stacks:/root/dockge/stacks
     environment:
       # Tell Dockge where is your stacks directory
       - DOCKGE_STACKS_DIR=/root/dockge/stacks
