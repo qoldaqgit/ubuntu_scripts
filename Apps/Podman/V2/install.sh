@@ -66,10 +66,10 @@ echo "services:
     volumes:
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock
       - /app/data:/app/data
-      - /app/stacks:/root/dockge/stacks
+      - /app/stacks:/app/stacks
     environment:
       # Tell Dockge where is your stacks directory
-      - DOCKGE_STACKS_DIR=/root/dockge/stacks
+      - DOCKGE_STACKS_DIR=/app/stacks
       # (Optional) Allow console managment
       # - DOCKGE_ENABLE_CONSOLE=true
 networks:
