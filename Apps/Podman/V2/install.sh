@@ -46,10 +46,10 @@ sudo loginctl enable-linger $USER
 systemctl --user enable --now podman.socket
 
 ##### Create Service for AutoRun #########
-sudo bash -c 'echo "[Unit]
+bash -c 'echo "[Unit]
 Description=Podman-autorun
 After=podman.service
-Before=shutdown.target reboot.target halt.target
+Before=shutdown.target reboot.target halt.target podman.service
 
 [Service]
 User=$USER
@@ -58,12 +58,14 @@ Type=oneshot
 RemainAfterExit=true
 
 ExecStartPre=
-ExecStart=/app/.podman/containers-manager-restart.sh   
+ExecStart=/app/.podman/find_containers.sh  
 ExecStop=podman stop -a
 
 [Install]
 WantedBy=default.target
-" > /etc/systemd/system/podman-autorun.service'
+" > podman-autorun.service'
+
+sudo mv podman-autorun.service /etc/systemd/system/podman-autorun.service
 
 ##### Install Dockge #####
 cd /app/data
