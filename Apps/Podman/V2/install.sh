@@ -38,8 +38,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=podman
-Group=podman
+User=1000
+Group=1000
 Type=oneshot
 RemainAfterExit=true
 
@@ -52,7 +52,7 @@ WantedBy=default.target
 " > /etc/systemd/system/podman-autorun.service'
 
 ##### Install Dockge #####
-cd /app
+cd /app/data
 echo "services:
   dockge:
     image: louislam/dockge:1
@@ -72,9 +72,10 @@ echo "services:
       # - DOCKGE_ENABLE_CONSOLE=true
 networks:
   intra_net:
+  ip: 10.69.10.2
     external: true
 " > compose.yaml
-
+podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
 podman-compose up -d
 ##### Setup user enviroment #####
 sudo loginctl enable-linger $USER
