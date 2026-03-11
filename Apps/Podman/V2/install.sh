@@ -52,8 +52,8 @@ After=podman.service
 Before=shutdown.target reboot.target halt.target podman.service
 
 [Service]
-User=$USER
-Group=$USER
+User=1000
+Group=1000
 Type=oneshot
 RemainAfterExit=true
 
