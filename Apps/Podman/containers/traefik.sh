@@ -1,7 +1,7 @@
 #sudo curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/containers/traefik.sh | bash
 #!/bin/bash
 
-cd ~/containers
+cd app/stacks
 #Setup containers Drives
 mkdir -p traefik traefik/config
 cd traefik
