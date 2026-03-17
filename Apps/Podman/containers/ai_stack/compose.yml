@@ -1,0 +1,159 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    environment:
+      - TUNNEL_TOKEN=${CF_DNS_TUNNEL_TOKEN}
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    networks:
+      - intra_net
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - .env
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
+      - CF_API_EMAIL=${CF_API_EMAIL}# Cloudflare email
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
+      - ./config/traefik.yaml:/traefik.yaml:ro
+      - ./config/acme.json:/acme.json
+      - ./config/config.yaml:/config.yaml:ro
+      - ./config/logs:/var/log/traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${TRAEFIK_SUBDOMAIN}.entrypoints=http
+      - traefik.http.routers.${TRAEFIK_SUBDOMAIN}.rule=Host(`${TRAEFIK_SUBDOMAIN}.${FQDN}`)
+      - traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}
+      - traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.routers.traefik.middlewares=traefik-https-redirect
+      - traefik.http.routers.traefik-secure.entrypoints=https
+      - traefik.http.routers.traefik-secure.rule=Host(`${TRAEFIK_SUBDOMAIN}.${FQDN}`)
+      - traefik.http.routers.traefik-secure.middlewares=traefik-auth
+      - traefik.http.routers.traefik-secure.tls=true
+      - traefik.http.routers.traefik-secure.tls.certresolver=cloudflare
+      - traefik.http.routers.traefik-secure.tls.domains[0].main=${FQDN}
+      - traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${FQDN}
+      - traefik.http.routers.traefik-secure.service=api@internal
+    networks:
+      - intra_net
+  open-webui:
+    volumes:
+      - ./open-webui:/app/backend/data
+    container_name: open-webui
+    restart: always
+    image: ghcr.io/open-webui/open-webui:main
+    #image: localhost/open-webui-mssql
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${OPENWEBUI_SUBDOMAIN}.entrypoints=https
+      - traefik.http.routers.${OPENWEBUI_SUBDOMAIN}.rule=Host(`${OPENWEBUI_SUBDOMAIN}.${FQDN}`)
+      - traefik.http.routers.${OPENWEBUI_SUBDOMAIN}.tls=true
+      - traefik.http.services.${OPENWEBUI_SUBDOMAIN}.loadbalancer.server.port=8080
+    networks:
+      - intra_net
+  db:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: default_db
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - ./postgres_data1:/var/lib/postgresql/data
+   # ports:
+   #   - ${POSTGRESDB_PORT}:5432
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -d default_db -U ${POSTGRES_USER}
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    networks:
+      - intra_net
+  litellm:
+    build:
+      context: .
+      args:
+        target: runtime
+    image: docker.litellm.ai/berriai/litellm:main-stable
+    container_name: litellm
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRESDB_HOST}:${POSTGRESDB_PORT}/${LITELLM_DATABASE}
+      STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
+    env_file:
+      - .env # Load local .env file
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${LITELLM_SUBDOMAIN}.entrypoints=https
+      - traefik.http.routers.${LITELLM_SUBDOMAIN}.rule=Host(`${LITELLM_SUBDOMAIN}.${FQDN}`)
+      - traefik.http.routers.${LITELLM_SUBDOMAIN}.tls=true
+      - traefik.http.services.${LITELLM_SUBDOMAIN}.loadbalancer.server.port=4000
+    depends_on:
+      - ${POSTGRESDB_HOST} # Indicates that this service depends on the 'db' service, ensuring 'db' starts first
+    healthcheck:
+      # Defines the health check configuration for the container
+      test:
+        - CMD-SHELL
+        - python3 -c "import urllib.request;
+          urllib.request.urlopen('http://localhost:4000/health/liveliness')" # Command to execute for health check
+      interval: 30s # Perform health check every 30 seconds
+      timeout: 10s # Health check command times out after 10 seconds
+      retries: 3 # Retry up to 3 times if health check fails
+      start_period: 40s # Wait 40 seconds after container start before beginning health checks
+    networks:
+      - intra_net
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    environment:
+      - N8N_HOST=${N8N_HOST:-0.0.0.0} # Bind to all interfaces (adjust if behind proxy)
+      - N8N_PORT=${N8N_PORT:-5678}
+      - N8N_PROTOCOL=${N8N_PROTOCOL:-http} # Use https if behind SSL terminator (e.g., Nginx, Traefik)
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=${POSTGRESDB_HOST:-db} # External PostgreSQL host (e.g., db.example.com)
+      - DB_POSTGRESDB_PORT=${POSTGRESDB_PORT:-5432}
+      - DB_POSTGRESDB_DATABASE=${N8N_DATABASE:-n8n}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - N8N_BASIC_AUTH_ACTIVE=true # Optional: enable basic auth for n8n UI
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY} # CRITICAL: set a strong random key for data encryption
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL:-http://localhost:5678} # Adjust if behind proxy/domain
+      - GENERIC_TIMEZONE=${SYSTEM_TIMEZONE}
+      - TZ=${SYSTEM_TIMEZONE}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./local-files:/files
+      #- ./n8n_data:/home/node/.n8n # Persist n8n config, workflows, credentials (optional but recommended)
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${N8N_SUBDOMAIN}.entrypoints=https
+      - traefik.http.routers.${N8N_SUBDOMAIN}.rule=Host(`${N8N_SUBDOMAIN}.${FQDN}`)
+      - traefik.http.routers.${N8N_SUBDOMAIN}.tls=true
+      - traefik.http.services.${N8N_SUBDOMAIN}.loadbalancer.server.port=5678
+    depends_on:
+      - ${POSTGRESDB_HOST}
+    networks:
+      - intra_net
+volumes:
+  n8n_data: null
+networks:
+  intra_net:
+    external: true
