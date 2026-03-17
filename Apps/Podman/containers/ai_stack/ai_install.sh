@@ -5,6 +5,12 @@ cd /app/stacks
 #Setup containers Drives
 mkdir -p ai_stack ai_stack/config
 cd ai_stack
+
+cat > init-db.sql << 'EOF'
+CREATE DATABASE litellm;
+CREATE DATABASE n8n;
+EOF
+
 #Create container compose file
 cat > compose.yaml << 'EOF'
 services:
