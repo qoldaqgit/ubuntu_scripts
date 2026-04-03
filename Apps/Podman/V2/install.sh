@@ -1,7 +1,7 @@
 #!/bin/bash
 #wget https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/V2/install.sh
 sudo apt update && sudo apt upgrade -y
-sudo apt-get -y install podman podman-compose composer nano qemu-guest-agent
+sudo apt-get -y install podman podman-compose composer npm nano qemu-guest-agent
 echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 
 ##### Create Required Dir/Files #####
