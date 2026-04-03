@@ -102,7 +102,7 @@ podman-compose up -d
 sudo systemctl --system daemon-reload
 sudo systemctl enable podman-autorun.service
 sudo systemctl start podman-autorun.service
-sudo systemctl status podman-autorun.service
+#sudo systemctl status podman-autorun.service
 
 cd ~
 #clear
