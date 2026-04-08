@@ -52,8 +52,8 @@ After=podman.service
 Before=shutdown.target reboot.target halt.target podman.service
 
 [Service]
-User=1000
-Group=1000
+User=->Here<-
+Group=->Here<-
 Type=oneshot
 RemainAfterExit=true
 
@@ -64,7 +64,7 @@ ExecStop=podman stop -a
 [Install]
 WantedBy=default.target
 " > podman-autorun.service'
-
+sed -i "s/->Here<-/$USER/g" podman-autorun.service
 sudo mv podman-autorun.service /etc/systemd/system/podman-autorun.service
 
 ##### Install Dockge #####
@@ -105,9 +105,15 @@ sudo systemctl start podman-autorun.service
 #sudo systemctl status podman-autorun.service
 
 cd ~
-#clear
 
 ##### Provide info to user #####
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
-echo -e "\e[0;32m[~] Podman has been successfully installed!\e[0m"
-echo -e "\e[0;32m[~] Please visit http://$IPHOST:5001 to complete the initall setup wizard.\e[0m\n"
+
+if curl -s --head http://$IPHOST:5001 | head -n 1 | grep "200" > /dev/null; then
+  clear
+  echo -e "\e[0;32m[~] Podman has been successfully installed!\e[0m"
+  echo -e "\e[0;32m[~] Please visit http://$IPHOST:5001 to complete the initall setup wizard.\e[0m\n"
+else
+  echo "Install Failed"
+fi
+
