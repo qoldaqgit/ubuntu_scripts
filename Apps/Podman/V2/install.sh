@@ -108,7 +108,7 @@ cd ~
 
 ##### Provide info to user #####
 IPHOST=$(ip route get 1 | awk '{print $(NF-2); exit}')
-
+sleep 5
 if curl -s --head http://$IPHOST:5001 | head -n 1 | grep "200" > /dev/null; then
   clear
   echo -e "\e[0;32m[~] Podman has been successfully installed!\e[0m"
