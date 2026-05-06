@@ -23,8 +23,6 @@ if [[ "$CONFIRM" != "y" ]]; then
     exit 1
 fi
 
-
-
 sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 if [[ "$EXTRA_TOOLS" == "y" ]]; then
@@ -96,7 +94,6 @@ if [ "$#" -eq 2 ]; then
 else
     echo "[-start/-stop] [path/to/compose/file]"
 fi
-
 EOF
 
 #### Set proper permission to files #####
@@ -104,19 +101,23 @@ sudo chmod 771 /app/.podman/container-start.sh
 sudo chmod 771 /app/.podman/container-start.sh
 sudo chmod 771 ~/containers2restart.sh
 
+
 ##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
 if [[ "$RESTRICTED_PORTS" == "y" ]]; then
 sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
 echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
 fi
+
+
 ##### Setup user enviroment #####
 sudo loginctl enable-linger $USER
 systemctl --user enable --now podman.socket
 
+
 ##### Create Service for AutoRun #########
-bash -c 'echo "[Unit]
-Description=Podman container-traefik.service
-Documentation=man:podman-generate-systemd(1)
+cat >  ~/.config/systemd/user/podman-autorun.service << 'EOF'
+[Unit]
+Description=Podman container-autorun.service
 Wants=network-online.target
 After=podman.service
 
@@ -132,17 +133,14 @@ ExecStop=/app/.podman/container-stop.sh
 
 [Install]
 WantedBy=default.target
-" > podman-autorun.service'
+EOF
 
-mv podman-autorun.service /home/vision/.config/systemd/user/podman-autorun.service
 systemctl --user daemon-reload
 systemctl --user enable podman-autorun.service
 systemctl --user start podman-autorun.service
 
 
-
 ##### Install Dockge #####
-
 if [[ "$DOCKGE" == "y" ]]; then
 cd /app/data
 echo "services:
