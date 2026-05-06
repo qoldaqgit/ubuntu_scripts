@@ -40,7 +40,8 @@ sudo chmod 700 /app/stacks /app/.podman /app/data
 
 echo "#!/bin/bash" > /app/.podman/container-start.sh
 echo "#!/bin/bash" > /app/.podman/container-start.sh
-cat << EOF  > ~/containers2restart.sh
+
+cat > ~/containers2restart.sh << 'EOF'
 #!/bin/bash
 if [ "$#" -eq 2 ]; then
 
