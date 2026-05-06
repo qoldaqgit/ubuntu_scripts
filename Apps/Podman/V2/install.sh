@@ -63,6 +63,7 @@ if [ "$#" -eq 2 ]; then
 
             if ! grep -Fxq "/usr/bin/podman-compose -f $2 up -d" "/app/.podman/container-start.sh"; then
                 echo "/usr/bin/podman-compose -f $2 up -d" >> "/app/.podman/container-start.sh"
+                /usr/bin/podman-compose -f $2 up -d
                 echo "Added to container-start"
             else
                 echo "Skipping, already exist in container-start"
@@ -84,12 +85,18 @@ if [ "$#" -eq 2 ]; then
     
         grep -Fv "/usr/bin/podman-compose -f $2 up -d" /app/.podman/container-start.sh > tmp && mv tmp /app/.podman/container-start.sh
         grep -Fv "/usr/bin/podman-compose -f $2 down" /app/.podman/container-stop.sh > tmp && mv tmp /app/.podman/container-stop.sh
+        read -p "Do you want to stop it now? (y/n) " STOPCONTAINER
+
+        if [ "$STOPCONTAINER" = "y" ]; then
+            podman-compose -f $2 down
+        fi
         echo "Removed"
     fi
 
 else
     echo "[-start/-stop] [path/to/compose/file]"
 fi
+
 EOF
 
 #### Set proper permission to files #####
