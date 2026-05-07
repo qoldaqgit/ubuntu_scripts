@@ -23,15 +23,15 @@ if [[ "$CONFIRM" != "y" ]]; then
     exit 1
 fi
 
-sudo apt update && sudo apt upgrade -y
+#sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
-if ! grep -Fqx "unqualified-search-registries = [\"docker.io\"]"  /etc/containers/registries.conf; then
+if [! grep -Fqx "unqualified-search-registries = [\"docker.io\"]"  /etc/containers/registries.conf]; then
     echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 fi
 
 
 if [[ "$EXTRA_TOOLS" == "y" ]]; then
-    sudo apt-get -y install composer npm
+sudo apt-get -y install composer npm
 fi
 
 ##### Create Required Dir/Files #####
@@ -108,7 +108,6 @@ if [ "$RESTRICTED_PORTS" == "y" ] && ! grep -Fqx "net.ipv4.ip_unprivileged_port_
     sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
     echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
 fi
-
 
 
 ##### Setup user enviroment #####
