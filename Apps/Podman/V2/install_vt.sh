@@ -23,7 +23,7 @@ if [[ "$CONFIRM" != "y" ]]; then
     exit 1
 fi
 
-#sudo apt update && sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
 podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
 
@@ -173,7 +173,7 @@ networks:
 
 read -p "Want to auto start Dockge? (y/n) " DOCKGEAUTO
 if [[ "$DOCKGEAUTO" == "y" ]]; then
-    container2start -start  $HOME/containers/dockge/compose.yaml
+    ~/ManageContainersRestart.sh -start  $HOME/containers/dockge/compose.yaml
 else
     podman-compose up -d
 fi
