@@ -25,7 +25,10 @@ fi
 
 #sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
-if [! grep -Fqx "unqualified-search-registries = [\"docker.io\"]"  /etc/containers/registries.conf]; then
+podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
+
+#Add docker.io as resources
+if ! grep -Fqx "unqualified-search-registries = [\"docker.io\"]"  /etc/containers/registries.conf; then
     echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 fi
 
@@ -40,36 +43,36 @@ mkdir ~/containers ~/containers/.podman
 echo '#!/bin/bash' > ~/containers/.podman/container-start.sh
 echo '#!/bin/bash' > ~/containers/.podman/container-stop.sh
 
-cat > ~/containers2restart.sh << 'EOF'
+cat > ~/ManageContainersRestart.sh << 'EOF'
 #!/bin/bash
 if [ "$#" -eq 2 ]; then
 
-    if [ ! -f "~/containers/.podman/container-start.sh" ]; then
+    if [ ! -f "$HOME/containers/.podman/container-start.sh" ]; then
         echo "#!/bin/bash
-        " > ~/containers/.podman/container-start.sh
-        sudo chmod 771 ~/containers/.podman/container-start.sh
-        echo "~/containers/.podman/container-start.sh created"
+        " > $HOME/containers/.podman/container-start.sh
+        sudo chmod 771 $HOME/containers/.podman/container-start.sh
+        echo "$HOME/containers/.podman/container-start.sh created"
     fi
-    if [ ! -f "~/containers/.podman/container-stop.sh" ]; then
+    if [ ! -f "$HOME/containers/.podman/container-stop.sh" ]; then
         echo "#!/bin/bash
-        " >  ~/containers/.podman/container-stop.sh
-        sudo chmod 771 ~/containers/.podman/container-stop.sh
-        echo "~/containers/.podman/container-stop.sh created"
+        " >  $HOME/containers/.podman/container-stop.sh
+        sudo chmod 771 $HOME/containers/.podman/container-stop.sh
+        echo "$HOME/containers/.podman/container-stop.sh created"
     fi
 
     if [ "$1" = "-start" ]; then
         if [[ -f $2 && ( $2 == *.yml || $2 == *.yaml ) ]]; then
 
-            if ! grep -Fxq "/usr/bin/podman-compose -f $2 up -d" "~/containers/.podman/container-start.sh"; then
-                echo "/usr/bin/podman-compose -f $2 up -d" >> "~/containers/.podman/container-start.sh"
+            if ! grep -Fxq "/usr/bin/podman-compose -f $2 up -d" "$HOME/containers/.podman/container-start.sh"; then
+                echo "/usr/bin/podman-compose -f $2 up -d" >> "$HOME/containers/.podman/container-start.sh"
                 /usr/bin/podman-compose -f $2 up -d
                 echo "Added to container-start"
             else
                 echo "Skipping, already exist in container-start"
             fi
 
-            if ! grep -Fxq "/usr/bin/podman-compose -f $2 down" "~/containers/.podman/container-stop.sh"; then
-                echo "/usr/bin/podman-compose -f $2 down" >> "~/containers/.podman/container-stop.sh"
+            if ! grep -Fxq "/usr/bin/podman-compose -f $2 down" "$HOME/containers/.podman/container-stop.sh"; then
+                echo "/usr/bin/podman-compose -f $2 down" >> "$HOME/containers/.podman/container-stop.sh"
                 echo "Added to container-stop"
             else
                 echo "Skipping, already exist in container-stop"
@@ -82,8 +85,8 @@ if [ "$#" -eq 2 ]; then
 
     if [ "$1" = "-stop" ]; then
     
-        grep -Fv "/usr/bin/podman-compose -f $2 up -d" ~/containers/.podman/container-start.sh > tmp && mv tmp ~/containers/.podman/container-start.sh
-        grep -Fv "/usr/bin/podman-compose -f $2 down" ~/containers/.podman/container-stop.sh > tmp && mv tmp ~/containers/.podman/container-stop.sh
+        grep -Fv "/usr/bin/podman-compose -f $2 up -d" $HOME/containers/.podman/container-start.sh > tmp && mv tmp $HOME/containers/.podman/container-start.sh
+        grep -Fv "/usr/bin/podman-compose -f $2 down" $HOME/containers/.podman/container-stop.sh > tmp && mv tmp $HOME/containers/.podman/container-stop.sh
         read -p "Do you want to stop it now? (y/n) " STOPCONTAINER
 
         if [ "$STOPCONTAINER" = "y" ]; then
@@ -100,7 +103,7 @@ EOF
 #### Set proper permission to files #####
 sudo chmod 771 ~/containers/.podman/container-start.sh
 sudo chmod 771 ~/containers/.podman/container-start.sh
-sudo chmod 771 ~/containers2restart.sh
+sudo chmod 771 ~/ManageContainersRestart.sh
 
 
 ##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
@@ -116,8 +119,7 @@ systemctl --user enable --now podman.socket
 
 
 ##### Create Service for AutoRun #########
-cat >  ~/.config/systemd/user/podman-autorun.service << 'EOF'
-[Unit]
+echo "[Unit]
 Description=Podman container-autorun.service
 Wants=network-online.target
 After=podman.service
@@ -129,12 +131,12 @@ Type=oneshot
 RemainAfterExit=true
 
 TimeoutStopSec=70
-ExecStart=~/containers/.podman/container-start.sh 
-ExecStop=~/containers/.podman/container-stop.sh 
+ExecStart=$HOME/containers/.podman/container-start.sh 
+ExecStop=$HOME/containers/.podman/container-stop.sh 
 
 [Install]
 WantedBy=default.target
-EOF
+" >  ~/.config/systemd/user/podman-autorun.service
 
 systemctl --user daemon-reload
 systemctl --user enable podman-autorun.service
@@ -168,9 +170,13 @@ networks:
     external: true
 " > compose.yaml
 ##### Setup Dockge env and start #####
-podman network create   --subnet 10.69.10.0/24   --gateway 10.69.10.1   intra_net
-podman-compose up -d
 
+read -p "Want to auto start Dockge? (y/n) " DOCKGEAUTO
+if [[ "$DOCKGEAUTO" == "y" ]]; then
+    container2start -start  $HOME/containers/dockge/compose.yaml
+else
+    podman-compose up -d
+fi
 cd ~
 
 ##### Provide info to user #####
