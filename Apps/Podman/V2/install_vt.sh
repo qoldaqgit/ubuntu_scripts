@@ -38,12 +38,12 @@ sudo apt-get -y install composer npm
 fi
 
 ##### Create Required Dir/Files #####
-mkdir ~/containers ~/containers/.podman
+mkdir $HOME/containers $HOME/containers/.podman
 
-echo '#!/bin/bash' > ~/containers/.podman/container-start.sh
-echo '#!/bin/bash' > ~/containers/.podman/container-stop.sh
+echo '#!/bin/bash' > $HOME/containers/.podman/container-start.sh
+echo '#!/bin/bash' > $HOME/containers/.podman/container-stop.sh
 
-cat > ~/ManageContainersRestart.sh << 'EOF'
+cat > $HOME/ManageContainersRestart.sh << 'EOF'
 #!/bin/bash
 if [ "$#" -eq 2 ]; then
 
@@ -101,9 +101,9 @@ fi
 EOF
 
 #### Set proper permission to files #####
-sudo chmod 771 ~/containers/.podman/container-start.sh
-sudo chmod 771 ~/containers/.podman/container-start.sh
-sudo chmod 771 ~/ManageContainersRestart.sh
+sudo chmod 771 $HOME/containers/.podman/container-start.sh
+sudo chmod 771 $HOME/containers/.podman/container-stop.sh
+sudo chmod 771 $HOME/ManageContainersRestart.sh
 
 
 ##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
@@ -136,7 +136,7 @@ ExecStop=$HOME/containers/.podman/container-stop.sh
 
 [Install]
 WantedBy=default.target
-" >  ~/.config/systemd/user/podman-autorun.service
+" >  $HOME/.config/systemd/user/podman-autorun.service
 
 systemctl --user daemon-reload
 systemctl --user enable podman-autorun.service
@@ -145,8 +145,8 @@ systemctl --user start podman-autorun.service
 
 ##### Install Dockge #####
 if [[ "$DOCKGE" == "y" ]]; then
-mkdir ~/containers/dockge
-cd ~/containers/dockge
+mkdir $HOME/containers/dockge
+cd $HOME/containers/dockge
 echo "services:
   dockge:
     image: louislam/dockge:1
@@ -173,7 +173,7 @@ networks:
 
 read -p "Want to auto start Dockge? (y/n) " DOCKGEAUTO
 if [[ "$DOCKGEAUTO" == "y" ]]; then
-    ~/ManageContainersRestart.sh -start  $HOME/containers/dockge/compose.yaml
+    $HOME/ManageContainersRestart.sh -start  $HOME/containers/dockge/compose.yaml
 else
     podman-compose up -d
 fi
