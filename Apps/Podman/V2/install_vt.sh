@@ -25,16 +25,20 @@ fi
 
 sudo apt update && sudo apt upgrade -y
 sudo apt-get -y install podman podman-compose nano qemu-guest-agent
-if [[ "$EXTRA_TOOLS" == "y" ]]; then
-sudo apt-get -y install composer npm
+if ! grep -Fqx "unqualified-search-registries = [\"docker.io\"]"  /etc/containers/registries.conf; then
+    echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
 fi
-echo "unqualified-search-registries = [\"docker.io\"]" | sudo tee -a /etc/containers/registries.conf
+
+
+if [[ "$EXTRA_TOOLS" == "y" ]]; then
+    sudo apt-get -y install composer npm
+fi
 
 ##### Create Required Dir/Files #####
-sudo mkdir ~/containers ~/containers/.podman
+mkdir ~/containers ~/containers/.podman
 
-echo "#!/bin/bash" > ~/containers/.podman/container-start.sh
-echo "#!/bin/bash" > ~/containers/.podman/container-start.sh
+echo '#!/bin/bash' > ~/containers/.podman/container-start.sh
+echo '#!/bin/bash' > ~/containers/.podman/container-stop.sh
 
 cat > ~/containers2restart.sh << 'EOF'
 #!/bin/bash
@@ -100,10 +104,11 @@ sudo chmod 771 ~/containers2restart.sh
 
 
 ##### Allow Lower ports for rootless Containers from (>1024) to (>=80) #####
-if [[ "$RESTRICTED_PORTS" == "y" ]]; then
-sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
-echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
+if [ "$RESTRICTED_PORTS" == "y" ] && ! grep -Fqx "net.ipv4.ip_unprivileged_port_start=80"  /etc/sysctl.conf; then
+    sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+    echo "net.ipv4.ip_unprivileged_port_start=80" | sudo tee -a /etc/sysctl.conf
 fi
+
 
 
 ##### Setup user enviroment #####
@@ -139,6 +144,7 @@ systemctl --user start podman-autorun.service
 
 ##### Install Dockge #####
 if [[ "$DOCKGE" == "y" ]]; then
+mkdir ~/containers/dockge
 cd ~/containers/dockge
 echo "services:
   dockge:
@@ -151,7 +157,7 @@ echo "services:
     volumes:
       - /run/user/1000/podman/podman.sock:/var/run/docker.sock
       - ./:/app/data
-      - ../containers:/app/stacks
+      - ../:/app/stacks
     environment:
       # Tell Dockge where is your stacks directory
       - DOCKGE_STACKS_DIR=/app/stacks
