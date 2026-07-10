@@ -175,4 +175,4 @@ accessLog:
 EOF
 touch acme.json
 chmod 600 acme.json
-sudo apt install apache2-utils
+sudo apt install apache2-utils -y
