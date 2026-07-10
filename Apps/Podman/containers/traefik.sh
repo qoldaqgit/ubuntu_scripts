@@ -17,7 +17,7 @@ services:
     env_file:
       - .env # store other secrets e.g., dashboard password
     networks:
-      - proxy
+      - intra_net
     ports:
       - 80:80
       - 443:443
@@ -53,15 +53,18 @@ networks:
   intra_net:
     external: true # or uncomment this line to stop auto create the network
 
+
 EOF
 
 #Create .env file
 cat > .env << 'EOF'
 TRAEFIK_DASHBOARD_CREDENTIALS= ### Run in terminal: echo $(htpasswd -nB the-new-username) | sed -e s/\\$/\\$\\$/g
-FQDN=your.domain
+FQDN= ### your domain ex. sample.com
+SUBDOMAIN= ### sub domain to get to Traefik Web UI ex. [traefik]  traefik.sample.com 
+#Cloudflared
+CF_API_EMAIL=admin@${FQDN}
+CF_DNS_API_TOKEN= ###Cloudflare API token
 EOF
-#Create cf-tocken
-echo "your-tocken-here" > cf-token
 
 cd config
 cat > config.yaml << 'EOF'
