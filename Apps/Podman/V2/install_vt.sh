@@ -1,5 +1,5 @@
 #!/bin/bash
-#wget https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/V2/install.sh
+#curl -sSL https://raw.githubusercontent.com/qoldaqgit/ubuntu_scripts/refs/heads/main/Apps/Podman/V2/install.sh | bash
 
 echo "Let's install Podman Rootless! but before we need to answer the following questions."
 
